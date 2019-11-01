@@ -1,5 +1,6 @@
 package se.lexicon.jakob;
 
+import java.util.Arrays;
 import java.util.Random;
 import java.util.Scanner;
 
@@ -58,51 +59,43 @@ public class HangmanGame {
 
 
         while (keepPlaying) {
-            String word = wordRandomizer();
-            String letterToChar = new String(new char[word.length()]).replace("\0", "_ "); //Convert the letters in the word to a character
+            String word = wordLibrary();
+            char[] underscore = new char[word.length()]; //get the length of the word and create array with same length
+            Arrays.fill(underscore, '_'); //Fill all indexes in the underscore array with '_'
+
             while (true) {
-                System.out.println("The word is: " + letterToChar); //Print out the word as characters
-                System.out.print("Enter a new letter: ");
+                System.out.println(word);
+                System.out.println(underscore);
+                //System.out.println("The word is: " + newCharacter); //Print out the word as characters
+                System.out.print("Letter: ");
                 String guess = scan.next();
-                userGuess(guess, word, letterToChar);
+
+                userGuess(guess, word, underscore);
             }
         }
     }
 
-    static String userGuess(String guess, String word, String letterToChar) {
-        String newCharacter = "";
-        int count = 0;
-
-        for (int i = 0; i < word.length(); i++) {
-            if (word.charAt(i) == guess.charAt(0)) {
-                newCharacter += guess.charAt(0);
-            } else if (letterToChar.charAt(i) != '_') {
-                newCharacter += word.charAt(i);
-            } else {
-                newCharacter += "_";
+    static String userGuess(String guess, String word, char[] underscore)
+    {
+            for (int i = 0; i < word.length(); i++)
+            {
+                //System.out.println(word.length());
+                if (guess.charAt(0) == word.charAt(i))
+                {
+                    underscore[i] = word.charAt(i);
+                }
             }
-        }
 
-        if (letterToChar.equals(newCharacter)) {
-            count++;
-        } else {
-            letterToChar = newCharacter;
-        }
-        if (letterToChar.equals(word)) {
-            System.out.println("You win!");
-            mainMenu();
-        }
-
-        return guess + word + letterToChar;
+        return guess + word + underscore;
     }
 
     //This method will return a random word from a String array
-    static String wordRandomizer() {
+    static String wordLibrary() {
         String[] wordArray = {"cow", "apple", "bicycle", "distinct", "democratic", "sticky", "elevator", "doctor", "bull", "colors"};
 
-        Random random = new Random();
-        int word = random.nextInt(wordArray.length); //This will assign a random word from the array to a new variable
+        Random random = new Random(); //Create Random variable
+        int randomWord = random.nextInt(wordArray.length); //This will assign a random word from the array to a new variable
 
-        return wordArray[word]; //Return the random word
+        return wordArray[randomWord]; //Return the random word selected from the array
     }
 }
