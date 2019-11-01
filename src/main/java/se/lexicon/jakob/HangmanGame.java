@@ -7,7 +7,8 @@ import java.util.Scanner;
 public class HangmanGame {
     public static Scanner scan;
 
-    public static void main(String[] args) {
+    public static void main(String[] args)
+    {
         scan = new Scanner(System.in);
 
         mainMenu();
@@ -15,7 +16,8 @@ public class HangmanGame {
         scan.close();
     }
 
-    static void mainMenu() {
+    static void mainMenu()
+    {
         boolean gameRunning = true;
 
         while (gameRunning) {
@@ -41,7 +43,8 @@ public class HangmanGame {
         }
     }
 
-    static void gameRules() {
+    static void gameRules()
+    {
         System.out.println("Hi there and welcome to Hangman." +
                 "\nWhat is Hangman, it is a guessing game, Where one player chooses a Word," +
                 "\nPhrase or Sentence and then draws one line-" +
@@ -53,7 +56,8 @@ public class HangmanGame {
                 "\nIf you successfully fill all the blanks you win!");
     }
 
-    static void mainGame() {
+    static void mainGame()
+    {
         System.out.println("===========[Hangman]===========");
         boolean keepPlaying = true;
 
@@ -62,6 +66,8 @@ public class HangmanGame {
             String word = wordLibrary();
             char[] underscore = new char[word.length()]; //get the length of the word and create array with same length
             Arrays.fill(underscore, '_'); //Fill all indexes in the underscore array with '_'
+
+            int count = 0;
 
             while (true) {
                 System.out.println(word);
@@ -77,20 +83,28 @@ public class HangmanGame {
 
     static String userGuess(String guess, String word, char[] underscore)
     {
-            for (int i = 0; i < word.length(); i++)
-            {
-                //System.out.println(word.length());
-                if (guess.charAt(0) == word.charAt(i))
-                {
+        for (int i = 0; i < word.length(); i++) {
+                if (guess.charAt(0) == word.charAt(i)) {
                     underscore[i] = word.charAt(i);
                 }
-            }
+        }
+        //winLoose();
 
         return guess + word + underscore;
     }
 
+    /*static void winLoose()
+    {
+        if(underscore == word)
+        {
+            System.out.println("The word was 'cow' You win!");
+            mainMenu();
+        }
+    }*/
+
     //This method will return a random word from a String array
-    static String wordLibrary() {
+    static String wordLibrary()
+    {
         String[] wordArray = {"cow", "apple", "bicycle", "distinct", "democratic", "sticky", "elevator", "doctor", "bull", "colors"};
 
         Random random = new Random(); //Create Random variable
