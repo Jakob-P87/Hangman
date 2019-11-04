@@ -6,7 +6,7 @@ import java.util.Scanner;
 
 public class HangmanGame {
     public static Scanner scan;
-    public static StringBuilder charToString = new StringBuilder();
+    //public static StringBuilder charToString = new StringBuilder();
 
     public static void main(String[] args)
     {
@@ -71,10 +71,6 @@ public class HangmanGame {
             int count = 0;
 
             while (count <= 8) {
-                if (charToString.equals(word)) {
-                    win(word);
-                }
-                System.out.println(charToString);
 
                 if (count >= 8) {
                     loose();
@@ -103,12 +99,19 @@ public class HangmanGame {
         for (int i = 0; i < word.length(); i++) {
             if (guess.charAt(0) == word.charAt(i)) {
                 underscore[i] = word.charAt(i);
+                String charToString = String.copyValueOf(underscore); //Convert the array of characters to string again
+
+                if (charToString.equals(word))
+                {
+                    win(word);
+                }
+
                 letterFound = true;
-                charToString.append(underscore[i]);
             } else if (guess.charAt(0) != word.charAt(i)) { //If the input is not equal to any letter in the word
                 underscore[i] = underscore[i];
             }
         }
+
         if (!letterFound) {
             count = wrongCounter(count);
         }
