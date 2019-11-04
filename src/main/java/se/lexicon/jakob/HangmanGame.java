@@ -6,10 +6,9 @@ import java.util.Scanner;
 
 public class HangmanGame {
     public static Scanner scan;
-    //public static StringBuilder charToString = new StringBuilder();
+    public static StringBuilder usedLetters = new StringBuilder();
 
-    public static void main(String[] args)
-    {
+    public static void main(String[] args) {
         scan = new Scanner(System.in);
 
         mainMenu();
@@ -17,17 +16,23 @@ public class HangmanGame {
         scan.close();
     }
 
-    static void mainMenu()
-    {
+    static void mainMenu() {
         boolean gameRunning = true;
 
         while (gameRunning) {
             System.out.println("==========[Main Menu]==========");
             System.out.println("=====[Welcome to Hangman!]=====");
             System.out.print("1.Play a game\n2.Game rules\n3.Exit game\nSelection: ");
-            int option = scan.nextInt();
+            //int choicehoice = Integer.parseInt("choice", menuChoice);
 
-            switch (option) {
+            while (!scan.hasNextInt()) { //Check if input is a valid choice, if not then ask user to make a new choice
+                System.out.print("Invalid selection!\nSelection: ");
+                scan.nextLine();
+            }
+            int menuChoice = scan.nextInt();
+
+
+            switch (menuChoice) {
                 case 1:
                     mainGame();
                     break;
@@ -38,27 +43,26 @@ public class HangmanGame {
                     gameRunning = false;
                     break;
                 default:
-                    System.out.print("Invalid selection!");
+
             }
         }
     }
 
-    static void gameRules()
-    {
+    static void gameRules() {
         System.out.println("Hi there and welcome to Hangman." +
                 "\nWhat is Hangman, it is a guessing game, Where one player chooses a Word," +
                 "\nPhrase or Sentence and then draws one line-" +
-                "\n-for each letter the words contain." +
+                "\n-for each letter the word contain, if there is more then one of the same letter-" +
+                "\n-it will fill all the positions that contains that letter" +
                 "\nThe game usually requires at least two players to be able to play a game." +
                 "\nThe player that is guessing can either guess one letter at the time and try to fill the blanks-" +
                 "\n-but can also try their luck and guess the whole word or sentence at once." +
-                "\nIf the you guess wrongCounterCounter more then eight times you loose the game." +
+                "\nIf the you guess wrong more then eight times you loose the game." +
                 "\nIf you successfully fill all the blanks you win!");
     }
 
     //This method will keep the game running as long as the player has not guessed wrong to many times or the player wins by finding the right word
-    static void mainGame()
-    {
+    static void mainGame() {
         System.out.println("===========[Hangman]===========");
         boolean keepPlaying = true;
 
@@ -92,8 +96,7 @@ public class HangmanGame {
     }
 
     //Main method for user guesses
-    static int userGuess(String guess, String word, char[] underscore, int count)
-    {
+    static int userGuess(String guess, String word, char[] underscore, int count) {
         boolean letterFound = false;
 
         for (int i = 0; i < word.length(); i++) {
@@ -101,14 +104,14 @@ public class HangmanGame {
                 underscore[i] = word.charAt(i);
                 String charToString = String.copyValueOf(underscore); //Convert the array of characters to string again
 
-                if (charToString.equals(word))
-                {
+                if (charToString.equals(word)) {
                     win(word);
                 }
 
                 letterFound = true;
             } else if (guess.charAt(0) != word.charAt(i)) { //If the input is not equal to any letter in the word
                 underscore[i] = underscore[i];
+                invalidLetters(guess);
             }
         }
 
@@ -119,23 +122,26 @@ public class HangmanGame {
         return count;
     }
 
+    //This method will contain all the letters that is not needed for the chosen word.
+    //It will also check if the letter has already been used.
+    static void invalidLetters(String guess) {
+
+    }
+
     //Method to tell when the player win
-    static void win(String word)
-    {
+    static void win(String word) {
         System.out.println("The word was " + word + " You win!");
         mainMenu();
     }
 
     //Method to exit to menu when player loose
-    static void loose()
-    {
+    static void loose() {
         System.out.println("You loose!");
         mainMenu();
     }
 
     //Method to count fails from user
-    static int wrongCounter(int count)
-    {
+    static int wrongCounter(int count) {
         count++;
         System.out.println("-------------------------------");
         System.out.println("Tries: " + count);
@@ -143,8 +149,7 @@ public class HangmanGame {
     }
 
     //This method will return a random word from a String array
-    static String wordLibrary()
-    {
+    static String wordLibrary() {
         String[] wordArray = {"cow", "apple", "bicycle", "distinct", "democratic", "sticky", "elevator", "doctor", "bull", "colors"};
 
         Random random = new Random(); //Create Random variable
