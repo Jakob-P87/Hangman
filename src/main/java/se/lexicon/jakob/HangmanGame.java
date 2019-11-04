@@ -6,6 +6,7 @@ import java.util.Scanner;
 
 public class HangmanGame {
     public static Scanner scan;
+    public static StringBuilder charToString = new StringBuilder();
 
     public static void main(String[] args)
     {
@@ -47,10 +48,10 @@ public class HangmanGame {
         System.out.println("Hi there and welcome to Hangman." +
                 "\nWhat is Hangman, it is a guessing game, Where one player chooses a Word," +
                 "\nPhrase or Sentence and then draws one line-" +
-                "\n-for each letter the newWords contain." +
+                "\n-for each letter the words contain." +
                 "\nThe game usually requires at least two players to be able to play a game." +
                 "\nThe player that is guessing can either guess one letter at the time and try to fill the blanks-" +
-                "\n-but can also try their luck and guess the whole newWord or sentence at once." +
+                "\n-but can also try their luck and guess the whole word or sentence at once." +
                 "\nIf the you guess wrongCounterCounter more then eight times you loose the game." +
                 "\nIf you successfully fill all the blanks you win!");
     }
@@ -63,20 +64,24 @@ public class HangmanGame {
 
 
         while (keepPlaying) {
-            String newWord = wordLibrary(); //New variable for the random selected newWord
-            char[] underscore = new char[newWord.length()]; //get the length of the newWord and create array with same length
+            String word = wordLibrary(); //New variable for the random selected word
+            char[] underscore = new char[word.length()]; //get the length of the word and create array with same length
             Arrays.fill(underscore, '_'); //Fill all indexes in the underscore array with '_'
 
             int count = 0;
 
             while (count <= 8) {
+                if (charToString.equals(word)) {
+                    win(word);
+                }
+                System.out.println(charToString);
 
-                if(count >= 8)
-                {
+                if (count >= 8) {
                     loose();
                 }
 
-                for (int i = 0; i <newWord.length(); i++) //This loop will create a space between every index in the character array
+                System.out.println(word);
+                for (int i = 0; i < word.length(); i++) //This loop will create a space between every index in the character array
                 {
                     System.out.print(underscore[i]);
                     System.out.print(" ");
@@ -85,50 +90,37 @@ public class HangmanGame {
                 System.out.print("\nLetter: ");
                 String guess = scan.next();
 
-                count = userGuess(guess, newWord, underscore, count);
+                count = userGuess(guess, word, underscore, count);
             }
         }
     }
 
     //Main method for user guesses
-    static int userGuess(String guess, String newWord, char[] underscore, int count)
+    static int userGuess(String guess, String word, char[] underscore, int count)
     {
         boolean letterFound = false;
 
-        for (int i = 0; i < newWord.length(); i++) {
-            if (guess.charAt(0) == newWord.charAt(i)) {
-                underscore[i] = newWord.charAt(i);
+        for (int i = 0; i < word.length(); i++) {
+            if (guess.charAt(0) == word.charAt(i)) {
+                underscore[i] = word.charAt(i);
                 letterFound = true;
-            } else if (guess.charAt(0) != newWord.charAt(i)) { //If the input is not equal to any letter in the newWord
+                charToString.append(underscore[i]);
+            } else if (guess.charAt(0) != word.charAt(i)) { //If the input is not equal to any letter in the word
                 underscore[i] = underscore[i];
-            }
-
-            if (underscore.equals(newWord))
-            {
-                System.out.println("The word was " + newWord + " You win!");
             }
         }
         if (!letterFound) {
             count = wrongCounter(count);
-            failedCharacters(guess);
         }
 
         return count;
     }
 
-    //Method to store all the letter that is not correct
-    static void failedCharacters(String guess)
-    {
-        StringBuilder usedCharacters = new StringBuilder();
-        usedCharacters.append(guess);
-
-        System.out.println(usedCharacters);
-    }
-
     //Method to tell when the player win
-    static void win()
+    static void win(String word)
     {
-
+        System.out.println("The word was " + word + " You win!");
+        mainMenu();
     }
 
     //Method to exit to menu when player loose
@@ -147,14 +139,14 @@ public class HangmanGame {
         return count;
     }
 
-    //This method will return a random newWord from a String array
+    //This method will return a random word from a String array
     static String wordLibrary()
     {
-        String[] newWordArray = {"cow", "apple", "bicycle", "distinct", "democratic", "sticky", "elevator", "doctor", "bull", "colors"};
+        String[] wordArray = {"cow", "apple", "bicycle", "distinct", "democratic", "sticky", "elevator", "doctor", "bull", "colors"};
 
         Random random = new Random(); //Create Random variable
-        int randomWord = random.nextInt(newWordArray.length); //This will assign a random newWord from the array to a new variable
+        int randomWord = random.nextInt(wordArray.length); //This will assign a random word from the array to a new variable
 
-        return newWordArray[randomWord]; //Return the random newWord selected from the array
+        return wordArray[randomWord]; //Return the random word selected from the array
     }
 }
