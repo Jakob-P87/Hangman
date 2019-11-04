@@ -23,12 +23,8 @@ public class HangmanGame {
             System.out.println("==========[Main Menu]==========");
             System.out.println("=====[Welcome to Hangman!]=====");
             System.out.print("1.Play a game\n2.Game rules\n3.Exit game\nSelection: ");
-            //int choicehoice = Integer.parseInt("choice", menuChoice);
 
-            while (!scan.hasNextInt()) { //Check if input is a valid choice, if not then ask user to make a new choice
-                System.out.print("Invalid selection!\nSelection: ");
-                scan.nextLine();
-            }
+            inputIntCheck();
             int menuChoice = scan.nextInt();
 
 
@@ -120,6 +116,15 @@ public class HangmanGame {
         }
 
         return count;
+    }
+
+    //Method for checking if the input from user is valid
+    static void inputIntCheck()
+    {
+        while (!scan.hasNextInt()) { //Check if input is a valid choice, if not then ask user to make a new choice
+            System.out.print("Invalid selection!\nSelection: ");
+            scan.nextLine();
+        }
     }
 
     //This method will contain all the letters that is not needed for the chosen word.
