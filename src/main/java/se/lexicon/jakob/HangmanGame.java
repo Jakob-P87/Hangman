@@ -71,7 +71,7 @@ public class HangmanGame {
             int count = 0;
 
             while (count <= 8) {
-                if (charToString.equals(word)) {
+                if (underscore.equals(word)) {
                     win(word);
                 }
                 System.out.println(charToString);
