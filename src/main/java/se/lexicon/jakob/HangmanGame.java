@@ -88,13 +88,14 @@ public class HangmanGame {
 
                 System.out.print("\nLetter: ");
                 String guess = scan.nextLine();
-                count = userGuess(guess, word, underscore, count);
+
+                count = guessLetter(guess, word, underscore, count);
             }
         }
     }
 
     //Main method for user guesses
-    static int userGuess(String guess, String word, char[] underscore, int count)
+    /*static int userGuess(String guess, String word, char[] underscore, int count)
     {
         boolean letterFound = false;
 
@@ -113,7 +114,7 @@ public class HangmanGame {
             }
 
             //Use this to input whole word, but it will make the game crash
-            /*else if(guess.charAt(i) == word.charAt(i))
+            else if(guess.charAt(i) == word.charAt(i))
             {
                 underscore[i] = word.charAt(i);
                 String charToString = String.copyValueOf(underscore); //Convert the array of characters to string again
@@ -121,7 +122,46 @@ public class HangmanGame {
                 if (charToString.equals(word)) {
                     win(word);
                 }
-            }*/
+            }
+
+            else if (guess.charAt(0) != word.charAt(i)) { //If the input is not equal to any letter in the word
+                underscore[i] = underscore[i];
+            }
+        }
+
+        if (!letterFound) {
+            count = wrongCounter(count);
+        }
+
+        return count;
+    }*/
+
+    //This method will get the secret word and convert it to an array of characters
+    static void convertWord()
+    {
+        String word = wordLibrary(); //New variable for the random selected word
+        char[] underscore = new char[word.length()]; //get the length of the word and create array with same length
+        Arrays.fill(underscore, '_'); //Fill all indexes in the underscore array with '_'
+    }
+
+    //Method will check user input with the word, if character exist then insert letter at correct position in the array
+    static int guessLetter(String guess, String word, char[] underscore, int count)
+    {
+        boolean letterFound = false;
+
+        for (int i = 0; i < word.length(); i++) {
+
+            //This if statement will only accept a single character, even if you input the whole word
+            if (guess.charAt(0) == word.charAt(i)) {
+                underscore[i] = word.charAt(i);
+                String charToString = String.copyValueOf(underscore); //Convert the array of characters to string again
+
+                if (charToString.equals(word)) {
+                    win(word);
+                }
+
+                letterFound = true;
+            }
 
             else if (guess.charAt(0) != word.charAt(i)) { //If the input is not equal to any letter in the word
                 underscore[i] = underscore[i];
@@ -135,22 +175,26 @@ public class HangmanGame {
         return count;
     }
 
-    /*static void convertWord()
+    static void guessWord(String guess, String word, char[] underscore, int count)
     {
-        String word = wordLibrary(); //New variable for the random selected word
-        char[] underscore = new char[word.length()]; //get the length of the word and create array with same length
-        Arrays.fill(underscore, '_'); //Fill all indexes in the underscore array with '_'
-    }*/
+        for (int i = 0; i < word.length(); i++) {
 
-    /*static void guessLetter()
-    {
+            //This if statement will only accept a single character, even if you input the whole word
+            if (guess.charAt(i) == word.charAt(i)) {
+                underscore[i] = word.charAt(i);
 
+                String charToString = String.copyValueOf(underscore); //Convert the array of characters to string again
+
+                if (charToString.equals(word)) { //If the new string matches the secret word then player wins
+                    win(word);
+                }
+            }
+
+            else if (guess.charAt(0) != word.charAt(i)) { //If the input is not equal to any letter in the word
+                underscore[i] = underscore[i];
+            }
+        }
     }
-
-    static void guessWord()
-    {
-
-    }*/
 
     //This method will contain all the letters that is not needed for the chosen word.
     //It will also check if the letter has already been used.
