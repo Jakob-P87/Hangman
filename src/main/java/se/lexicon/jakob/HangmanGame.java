@@ -135,7 +135,14 @@ public class HangmanGame {
         return count;
     }
 
-    static void guessLetter()
+    /*static void convertWord()
+    {
+        String word = wordLibrary(); //New variable for the random selected word
+        char[] underscore = new char[word.length()]; //get the length of the word and create array with same length
+        Arrays.fill(underscore, '_'); //Fill all indexes in the underscore array with '_'
+    }*/
+
+    /*static void guessLetter()
     {
 
     }
@@ -143,14 +150,14 @@ public class HangmanGame {
     static void guessWord()
     {
 
-    }
+    }*/
 
     //This method will contain all the letters that is not needed for the chosen word.
     //It will also check if the letter has already been used.
-    static void invalidLetters()
+    /*static void invalidLetters()
     {
 
-    }
+    }*/
 
     //Method for checking if the input from user is valid
     static void inputIntCheck()
