@@ -4,10 +4,13 @@ import java.util.Arrays;
 import java.util.Random;
 import java.util.Scanner;
 
-public class HangmanGame {
+public class HangmanGame
+{
     public static Scanner scan;
     public static StringBuilder sb = new StringBuilder();
+    public static int count; //Sorry had to make this global for the moment :*(
 
+    //Method to start application
     public static void main(String[] args)
     {
         scan = new Scanner(System.in);
@@ -17,11 +20,13 @@ public class HangmanGame {
         scan.close();
     }
 
+    //Method with selections for different choices in application
     static void mainMenu()
     {
         boolean gameRunning = true;
 
-        while (gameRunning) {
+        while (gameRunning)
+        {
             System.out.println("==========[Main Menu]==========");
             System.out.println("=====[Welcome to Hangman!]=====");
             System.out.print("1.Play a game\n2.Game rules\n3.Exit game\nSelection: ");
@@ -29,7 +34,8 @@ public class HangmanGame {
             inputIntCheck();
             int menuChoice = Integer.parseInt(scan.nextLine());
 
-            switch (menuChoice) {
+            switch (menuChoice)
+            {
                 case 1:
                     mainGame();
                     break;
@@ -45,6 +51,7 @@ public class HangmanGame {
         }
     }
 
+    //Only a method to explain how to play
     static void gameRules()
     {
         System.out.println("Hi there and welcome to Hangman." +
@@ -64,22 +71,26 @@ public class HangmanGame {
     {
         System.out.println("===========[Hangman]===========");
         boolean keepPlaying = true;
+        sb.delete(0, 20); //Reset the StringBuilder before new game
+        count = 8; //Reset count before new game
 
-
-        while (keepPlaying) {
+        while (keepPlaying)
+        {
             String word = wordLibrary(); //New variable for the random selected word
             char[] underscore = new char[word.length()]; //get the length of the word and create array with same length
             Arrays.fill(underscore, '_'); //Fill all indexes in the underscore array with '_'
 
-            int count = 0;
+            while (count > 0)
+            {
 
-            while (count <= 8) {
-
-                if (count >= 8) {
+                if (count == 0)
+                {
                     loose();
                 }
 
-                System.out.println(word);
+                System.out.println("Guesses left: " + count);
+                System.out.println("UsedLetters: " + sb);
+
                 for (int i = 0; i < word.length(); i++) //This loop will create a space between every index in the character array
                 {
                     System.out.print(underscore[i]);
@@ -87,133 +98,107 @@ public class HangmanGame {
                 }
 
                 System.out.print("\nLetter: ");
-                String guess = scan.nextLine();
+                String guess = scan.nextLine().toLowerCase();
 
-                if (guess.length() > 1) //If statement to make sure the game uses the correct method for word or letter
+                if (guess.length() > 1) //If statement to see if input is single char or a word
                 {
-                    guessWord(guess, word, underscore, count);
-                } else {
-                    count = guessLetter(guess, word, underscore, count);
+                    guessWord(guess, word, underscore);
+                } else
+                {
+                    guessLetter(guess, word, underscore);
                 }
             }
         }
-    }
-
-    //Main method for user guesses
-    /*static int userGuess(String guess, String word, char[] underscore, int count)
-    {
-        boolean letterFound = false;
-
-        for (int i = 0; i < word.length(); i++) {
-
-            //This if statement will only accept a single character, even if you input the whole word
-            if (guess.charAt(0) == word.charAt(i)) {
-                underscore[i] = word.charAt(i);
-                String charToString = String.copyValueOf(underscore); //Convert the array of characters to string again
-
-                if (charToString.equals(word)) {
-                    win(word);
-                }
-
-                letterFound = true;
-            }
-
-            //Use this to input whole word, but it will make the game crash
-            else if(guess.charAt(i) == word.charAt(i))
-            {
-                underscore[i] = word.charAt(i);
-                String charToString = String.copyValueOf(underscore); //Convert the array of characters to string again
-
-                if (charToString.equals(word)) {
-                    win(word);
-                }
-            }
-
-            else if (guess.charAt(0) != word.charAt(i)) { //If the input is not equal to any letter in the word
-                underscore[i] = underscore[i];
-            }
-        }
-
-        if (!letterFound) {
-            count = wrongCounter(count);
-        }
-
-        return count;
-    }*/
-
-    //This method will get the secret word and convert it to an array of characters
-    static void convertWord()
-    {
-        String word = wordLibrary(); //New variable for the random selected word
-        char[] underscore = new char[word.length()]; //get the length of the word and create array with same length
-        Arrays.fill(underscore, '_'); //Fill all indexes in the underscore array with '_'
     }
 
     //Method will check user input with the word, if character exist then insert letter at correct position in the array
-    static int guessLetter(String guess, String word, char[] underscore, int count)
+    static int guessLetter(String guess, String word, char[] underscore)
     {
         boolean letterFound = false;
 
-        for (int i = 0; i < word.length(); i++) {
-
-            //This if statement will only accept a single character, even if you input the whole word
-            if (guess.charAt(0) == word.charAt(i)) {
-                underscore[i] = word.charAt(i);
+        for (int i = 0; i < word.length(); i++)
+        {
+            //If statement to check single char input
+            if (guess.charAt(0) == word.charAt(i))
+            {
+                underscore[i] = word.charAt(i); //Insert character in char array
                 String charToString = String.copyValueOf(underscore); //Convert the array of characters to string again
 
-                if (charToString.equals(word)) {
+                if (charToString.equals(word)) //Check if the new string is equal to the secret word
+                {
                     win(word);
                 }
 
                 letterFound = true;
-            } else if (guess.charAt(0) != word.charAt(i)) { //If the input is not equal to any letter in the word
+            } else if (guess.charAt(0) != word.charAt(i)) //If the input is not equal to any letter in the word, do nothing to char array
+            {
                 underscore[i] = underscore[i];
             }
         }
 
-        if (!letterFound) {
-            count = wrongCounter(count);
+        if (!letterFound) //If letter does not exist in the word, add it to the StringBuilder
+        {
             sb = guessedLetters(guess);
-            System.out.println("UsedLetters: " + sb);
+            //System.out.println("UsedLetters: " + sb);
         }
 
         return count;
     }
 
-    static void guessWord(String guess, String word, char[] underscore, int count)
+    static void guessWord(String guess, String word, char[] underscore)
     {
-        for (int i = 0; i < word.length(); i++) {
-
-            if (guess.charAt(i) == word.charAt(i)) {
-                underscore[i] = word.charAt(i);
-
+        for (int i = 0; i < guess.length(); i++) //Loop as many times as characters in input
+        {
+            if (guess.charAt(i) == word.charAt(i)) //Check the input and compare to the secret word
+            {
+                if (guess.length() != word.length()) //If input is not the same length as secret word, then the input is wrong
+                {
+                    System.out.println("Not the right word");
+                    break;
+                } else
+                {
+                    underscore[i] = word.charAt(i); //Convert the input to char array
+                }
                 String charToString = String.copyValueOf(underscore); //Convert the array of characters to string again
 
-                if (charToString.equals(word)) { //If the new string matches the secret word then player wins
+                if (charToString.equals(word)) //If the new string matches the secret word then player wins
+                {
                     win(word);
                 }
-            } else if (guess.charAt(0) != word.charAt(i)) { //If the input is not equal to any letter in the word
-                underscore[i] = underscore[i];
+            } else if (guess.charAt(i) != word.charAt(i)) //If the char input is not the same as secret word, then input is wrong
+            {
+                System.out.println("Not the right word");
+                return;
             }
         }
     }
 
-    //This method will contain all the letters that is not needed for the chosen word.
-    //It will also check if the letter has already been used.
+    //This method will contain all the inputs from the user.
+    //It will also check if the letter has already been used, so it can't be used again.
     static StringBuilder guessedLetters(String guess)
     {
-        if (sb.length() > 0) {
+        boolean letterFound = false;
 
-            for (int i = 0; i < sb.length(); i++) {
-                if (guess.charAt(0) == sb.charAt(i)) {
-                    break;
-                } else{
-                    sb.append(guess);
+        if (sb.length() > 0) //If the StringBuilder has more then 0 letters
+        {
+            for (int i = 0; i < sb.length(); i++) //Keep looping as many times as the StringBuilder has characters
+            {
+                if (guess.charAt(0) == sb.charAt(i)) //Check if input is in StringBuilder
+                {
+                    letterFound = true; //Don't add new character
                 }
             }
-        } else {
-            sb.append(guess);
 
+            if (!letterFound) //If the input is not in the StringBuilder
+            {
+                sb.append(guess); //Add the new character
+                wrongCounter(); //Add to counter
+            }
+
+        } else //Add the first wrong letter in the StringBuilder
+        {
+            sb.append(guess); //Add the new character
+            wrongCounter(); //Add to counter
         }
         return sb;
     }
@@ -221,7 +206,8 @@ public class HangmanGame {
     //Method for checking if the input from user is valid
     static void inputIntCheck()
     {
-        while (!scan.hasNextInt()) { //Check if input is a valid choice, if not then ask user to make a new choice
+        while (!scan.hasNextInt())
+        { //Check if input is a valid choice, if not then ask user to make a new choice
             System.out.print("Invalid selection!\nSelection: ");
             scan.nextLine();
         }
@@ -241,14 +227,13 @@ public class HangmanGame {
         mainMenu();
     }
 
-    //Method to count fails from user
-    static int wrongCounter(int count)
+    //Method to count user guesses
+    static void wrongCounter()
     {
-        count++;
+        count--;
         System.out.println("-------------------------------");
-        System.out.println("Tries: " + count);
 
-        return count;
+        return;
     }
 
     //This method will return a random word from a String array
@@ -259,8 +244,8 @@ public class HangmanGame {
                 "bull", "colors", "cat", "dog", "bird", "oven", "mushroom",};
 
         Random random = new Random(); //Create Random variable
-        int randomWord = random.nextInt(wordArray.length); //This will assign a random word from the array to a new variable
+        int secretWord = random.nextInt(wordArray.length); //This will assign a random word from the array to a new variable
 
-        return wordArray[randomWord]; //Return the random word selected from the array
+        return wordArray[secretWord]; //Return the random word selected from the array
     }
 }
