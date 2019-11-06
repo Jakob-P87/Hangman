@@ -89,7 +89,12 @@ public class HangmanGame {
                 System.out.print("\nLetter: ");
                 String guess = scan.nextLine();
 
-                count = guessLetter(guess, word, underscore, count);
+                if (guess.length() > 1) //If statement to make sure the game uses the correct method for word or letter
+                {
+                    guessWord(guess, word, underscore, count);
+                } else {
+                    count = guessLetter(guess, word, underscore, count);
+                }
             }
         }
     }
@@ -161,15 +166,15 @@ public class HangmanGame {
                 }
 
                 letterFound = true;
-            }
-
-            else if (guess.charAt(0) != word.charAt(i)) { //If the input is not equal to any letter in the word
+            } else if (guess.charAt(0) != word.charAt(i)) { //If the input is not equal to any letter in the word
                 underscore[i] = underscore[i];
             }
         }
 
         if (!letterFound) {
             count = wrongCounter(count);
+            sb = guessedLetters(guess);
+            System.out.println("UsedLetters: " + sb);
         }
 
         return count;
@@ -179,7 +184,6 @@ public class HangmanGame {
     {
         for (int i = 0; i < word.length(); i++) {
 
-            //This if statement will only accept a single character, even if you input the whole word
             if (guess.charAt(i) == word.charAt(i)) {
                 underscore[i] = word.charAt(i);
 
@@ -188,9 +192,7 @@ public class HangmanGame {
                 if (charToString.equals(word)) { //If the new string matches the secret word then player wins
                     win(word);
                 }
-            }
-
-            else if (guess.charAt(0) != word.charAt(i)) { //If the input is not equal to any letter in the word
+            } else if (guess.charAt(0) != word.charAt(i)) { //If the input is not equal to any letter in the word
                 underscore[i] = underscore[i];
             }
         }
@@ -198,10 +200,23 @@ public class HangmanGame {
 
     //This method will contain all the letters that is not needed for the chosen word.
     //It will also check if the letter has already been used.
-    /*static void invalidLetters()
+    static StringBuilder guessedLetters(String guess)
     {
+        if (sb.length() > 0) {
 
-    }*/
+            for (int i = 0; i < sb.length(); i++) {
+                if (guess.charAt(0) == sb.charAt(i)) {
+                    break;
+                } else{
+                    sb.append(guess);
+                }
+            }
+        } else {
+            sb.append(guess);
+
+        }
+        return sb;
+    }
 
     //Method for checking if the input from user is valid
     static void inputIntCheck()
@@ -232,6 +247,7 @@ public class HangmanGame {
         count++;
         System.out.println("-------------------------------");
         System.out.println("Tries: " + count);
+
         return count;
     }
 
