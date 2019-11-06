@@ -27,8 +27,8 @@ public class HangmanGame
 
         while (gameRunning)
         {
-            System.out.println("==========[Main Menu]==========");
             System.out.println("=====[Welcome to Hangman!]=====");
+            System.out.println("==========[Main Menu]==========");
             System.out.print("1.Play a game\n2.Game rules\n3.Exit game\nSelection: ");
 
             inputIntCheck();
@@ -54,16 +54,15 @@ public class HangmanGame
     //Only a method to explain how to play
     static void gameRules()
     {
-        System.out.println("Hi there and welcome to Hangman." +
-                "\nWhat is Hangman, it is a guessing game, Where one player chooses a Word," +
-                "\nPhrase or Sentence and then draws one line-" +
-                "\n-for each letter the word contain, if there is more then one of the same letter-" +
-                "\n-it will fill all the positions that contains that letter" +
-                "\nThe game usually requires at least two players to be able to play a game." +
-                "\nThe player that is guessing can either guess one letter at the time and try to fill the blanks-" +
-                "\n-but can also try their luck and guess the whole word or sentence at once." +
-                "\nIf the you guess wrong more then eight times you loose the game." +
-                "\nIf you successfully fill all the blanks you win!");
+        System.out.println("===========[RULES]============" +
+                "\nThe computer will choose a random word." +
+                "\nThe word will be presented as underscores, each representing a character in the word." +
+                "\nThe player will have 8 guesses at the beginning." +
+                "\nThe player will guess a letter they think is in the word." +
+                "\nIf the word contains the chosen letter, it will be placed at the right position" +
+                "\nIf the player guess wrong, they loose one guess" +
+                "\nIf the player is confident enough they can guess the whole word" +
+                "\n\nThis is basically how Hangman works, Good luck!\n");
     }
 
     //This method will keep the game running as long as the player has not guessed wrong to many times or the player wins by finding the right word
@@ -76,20 +75,21 @@ public class HangmanGame
 
         while (keepPlaying)
         {
-            String word = wordLibrary(); //New variable for the random selected word
+            String word = wordLibrary().toUpperCase(); //New variable for the random selected word
             char[] underscore = new char[word.length()]; //get the length of the word and create array with same length
             Arrays.fill(underscore, '_'); //Fill all indexes in the underscore array with '_'
 
-            while (count > 0)
+            while (count >= 0)
             {
 
-                if (count == 0)
+                if (count <= 0)
                 {
                     loose();
                 }
 
-                System.out.println("Guesses left: " + count);
-                System.out.println("UsedLetters: " + sb);
+                //System.out.println(word);
+                System.out.println("Guesses left: " + count); //Show how many guesses left
+                System.out.println("UsedLetters: " + sb); //Show used letter that don't work
 
                 for (int i = 0; i < word.length(); i++) //This loop will create a space between every index in the character array
                 {
@@ -98,7 +98,7 @@ public class HangmanGame
                 }
 
                 System.out.print("\nLetter: ");
-                String guess = scan.nextLine().toLowerCase();
+                String guess = scan.nextLine().toUpperCase();
 
                 if (guess.length() > 1) //If statement to see if input is single char or a word
                 {
@@ -154,6 +154,7 @@ public class HangmanGame
                 if (guess.length() != word.length()) //If input is not the same length as secret word, then the input is wrong
                 {
                     System.out.println("Not the right word");
+                    wrongCounter(); //Add to counter
                     break;
                 } else
                 {
@@ -168,6 +169,7 @@ public class HangmanGame
             } else if (guess.charAt(i) != word.charAt(i)) //If the char input is not the same as secret word, then input is wrong
             {
                 System.out.println("Not the right word");
+                wrongCounter(); //Add to counter
                 return;
             }
         }
@@ -231,7 +233,7 @@ public class HangmanGame
     static void wrongCounter()
     {
         count--;
-        System.out.println("-------------------------------");
+        System.out.println("_______________________________");
 
         return;
     }
